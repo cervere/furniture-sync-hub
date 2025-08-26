@@ -1,13 +1,37 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { WelcomePage } from "@/components/WelcomePage";
+import { ListPage } from "@/components/ListPage";
+import { generateListId } from "@/utils/listGenerator";
 
 const Index = () => {
+  const [currentView, setCurrentView] = useState<'welcome' | 'list'>('welcome');
+  const [listId, setListId] = useState<string>('');
+
+  const handleStartList = () => {
+    const newListId = generateListId();
+    setListId(newListId);
+    setCurrentView('list');
+  };
+
+  const handleJoinList = (code: string) => {
+    setListId(code);
+    setCurrentView('list');
+  };
+
+  const handleBack = () => {
+    setCurrentView('welcome');
+    setListId('');
+  };
+
+  if (currentView === 'list') {
+    return <ListPage listId={listId} onBack={handleBack} />;
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
-    </div>
+    <WelcomePage 
+      onStartList={handleStartList}
+      onJoinList={handleJoinList}
+    />
   );
 };
 
